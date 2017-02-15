@@ -6,6 +6,11 @@ require_relative 'db/connection.rb'
 
 require_relative 'models/pokemon'
 
+
+get '/' do
+redirect ("/pokemons")
+end
+
 get '/pokemons' do
   @pokemons = Pokemon.all
   erb :"pokemons/index"
@@ -18,12 +23,19 @@ get '/pokemons/:id/edit' do
 
 end
 
-put '/pokemons/:id/edit' do
+
+
+put '/pokemons/:id' do
   @pokemon = Pokemon.find(params[:id])
   @pokemon.update(params[:pokemon])
-  erb :"pokemons/edit"
-  redirect("/pokemons/#{pokemon.id}")
-  
+  redirect("/pokemons/#{@pokemon.id}")
+
+end
+
+delete '/pokemons/:id' do
+  @pokemon = Pokemon.find(params[:id])
+  @pokemon.delete
+  redirect('/pokemons')
 end
 
 get'/pokemons/new' do
@@ -35,18 +47,10 @@ get '/pokemons/:id' do
   erb :"pokemons/show"
 end
 
+
+
 post '/pokemons' do
   @pokemon = Pokemon.create(params[:pokemon])
   redirect "/pokemons/#{@pokemon.id}"
 
-end
-
-
-
-delete '/pokemons/:id/edit' do
-  @pokemon = pokemon.find(params[:id])
-  @pokemon.delete
-  
-  erb :"pokemons/edit"
-  redirect('/pokemons')
 end
